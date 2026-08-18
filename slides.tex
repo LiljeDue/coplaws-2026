@@ -1,0 +1,333 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{bbm}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{bookmark}
+\usepackage{booktabs}
+
+\newcommand{\id}[1]{\ensuremath{\mathit{#1}}}
+\newcommand{\kw}[1]{\ensuremath{\mathtt{#1}}}
+\newcommand{\Let}{\kw{let}}
+\newcommand{\In}{\kw{in}}
+\newcommand{\If}{\kw{if}}
+\newcommand{\Then}{\kw{then}}
+\newcommand{\Else}{\kw{else}}
+\newcommand{\Filter}{\kw{filter}}
+\newcommand{\Or}{\kw{or}}
+\newcommand{\Groupby}{\kw{groupby}}
+\newcommand{\Partition}{\kw{partition}}
+\newcommand{\Scatter}{\kw{scatter}}
+\newcommand{\Hist}{\kw{hist}}
+\newcommand{\Map}{\kw{map}}
+\newcommand{\Scan}{\kw{scan}}
+\newcommand{\Sum}{\kw{sum}}
+\newcommand{\Mod}{\kw{mod}}
+\newcommand{\Fst}{\kw{fst}}
+\newcommand{\Snd}{\kw{snd}}
+\newcommand{\Presum}{\kw{presum}}
+\newcommand{\True}{\kw{true}}
+\newcommand{\False}{\kw{false}}
+\newcommand{\Sort}{\kw{sort}}
+\newcommand{\Segor}{\kw{segor}}
+\newcommand{\Hash}{\kw{hash}}
+\newcommand{\Random}{\kw{random}}
+\newcommand{\Iota}{\kw{iota}}
+\newcommand{\Unzip}{\kw{unzip}}
+\newcommand{\Unit}{\mathbf{unit}}
+\newcommand{\Int}{\mathbf{int}}
+\newcommand{\Bool}{\mathbf{bool}}
+\newcommand{\Def}{\kw{def}}
+\newcommand{\While}{\kw{while}}
+\newcommand{\Do}{\kw{do}}
+\newcommand{\Rep}{\kw{rep}}
+\newcommand{\Zip}{\kw{zip}}
+
+\usetikzlibrary{automata, positioning, arrows}
+
+\definecolor{mint}{HTML}{B8E6D9}
+\definecolor{deepteal}{HTML}{1B7A6B}
+\definecolor{fuseA}{HTML}{C1603F}
+\definecolor{fuseB}{HTML}{0047AB}
+
+\newcolumntype{M}[2]{>{\centering\arraybackslash}m{#1}<{\rule{0pt}{#2}}}
+\newcommand{\darkmint}{mint!70!black}
+\setbeamercolor{background canvas}{bg=mint}
+
+\usetheme{default}
+\usecolortheme{wolverine}
+\setbeamercolor*{palette primary}{bg=deepteal, fg=white}
+\setbeamercolor*{palette quaternary}{bg=deepteal, fg=white}
+\setbeamercolor{structure}{fg=deepteal}
+\setbeamertemplate{navigation symbols}{\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{blocks}[rounded][shadow]
+\setbeamercolor{block title}{bg=structure, fg=white}
+\setbeamercolor{block body}{bg=structure!20!mint, fg=black}
+\setbeamercolor{block title alerted}{bg=structure, fg=white}
+\setbeamercolor{block body alerted}{bg=structure!20!mint, fg=black}
+\setbeamercolor{block title example}{bg=structure, fg=white}
+\setbeamercolor{block body example}{bg=structure!20!mint, fg=black}
+\setbeamercolor{frametitle}{bg=deepteal, fg=white}
+
+\setbeamertemplate{itemize item}{\scriptsize$\blacksquare$}
+\setbeamertemplate{itemize subitem}{\scriptsize$\blacksquare$}
+\setbeamertemplate{itemize subsubitem}{\scriptsize$\blacksquare$}
+
+% ---- Futhark code listing style ----
+
+\title{Presentation}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Motivation}
+\end{frame}
+
+\begin{frame}{Filter written in Futhark}
+\vspace{1em}
+
+{\ttfamily\small
+\textbf{def} filter [n] 'a (p: a -> bool) (as: [n]a) : []a = \\[0.3em]
+\quad\textbf{let} flags = map p as \\[0.3em]
+\quad\textbf{let} offsets = scan (+) 0 (map bool.i64 flags) \\[0.3em]
+\quad\textbf{let} is = map2 (\textbackslash f o -> if f then o - 1 else -1) flags offsets \\[0.3em]
+\quad\textbf{let} result = scatter (copy as) is as} \\[0.3em]
+\quad\:\:\textbf{in} take~offsets[n - 1]~result
+\end{frame}
+
+\begin{frame}{Example}
+Example using an is even predicate.
+\begin{align*}
+  \kw{as}~:=~& [0, 1, 2, 3, 4, 5] \\
+  \only<2->{\kw{flags}~:=~& [\id{t}, \id{f}, \id{t}, \id{f}, \id{t}, \id{f}]} \\
+  \only<3->{\kw{offsets}~:=~& [1, 1, 2, 2, 3, 3]} \\
+  \only<4->{\kw{is}~:=~& [0, -1, 1, -1, 2, -1]} \\
+  \only<5->{\kw{result}~:=~& [0, 2, 4, 0, 0, 0]} \\
+  \only<6->{\kw{take}~\kw{offsets[n - 1]}~\kw{result}~:=~& [0, 2, 4]}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Filter written in Futhark}
+\vspace{1em}
+
+{\ttfamily\small
+\textbf{def} filter [n] 'a (p: a -> bool) (as: [n]a) : []a = \\[0.3em]
+\quad\only<1->{\color{fuseA}}\textbf{let} flags = map p as \\[0.3em]
+\quad\only<1->{\color{fuseA}}\textbf{let} offsets = scan (+) 0 (map bool.i64 flags) \\[0.3em]
+\quad\only<1->{\color{fuseB}}\textbf{let} is = map2 (\textbackslash f o -> if f then o - 1 else -1) flags offsets \\[0.3em]
+\quad\only<1->{\color{fuseB}}\textbf{let} result = scatter (copy as) is as} \\[0.3em]
+\quad\:\:\textbf{in} take~offsets[n - 1]~result
+\end{frame}
+
+\begin{frame}{Filter written in CUDA}
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=2.2cm, minimum height=1.1cm, align=center, font=\normalsize},
+  kernelbox/.style={box, fill=deepteal, text=white},
+  memBox/.style={box, fill=white, draw=deepteal},
+  arr/.style={->, >=stealth, thick, deepteal}
+]
+
+% Row 1: naive two kernels
+\node[memBox] (in1) at (-6.8,3) {Global input};
+\node[kernelbox] (k1) at (-3.4,3) {Kernel 1 \\ \footnotesize pre-map + scan};
+\node[memBox] (g1) at (0,3) {Global memory \\ \footnotesize flags, offsets};
+\node[kernelbox] (k2) at (3.4,3) {Kernel 2 \\ \footnotesize post-map, scatter};
+\node[memBox] (out1) at (6.8,3) {Global output};
+
+\draw[arr] (in1) -- (k1);
+\draw[arr] (k1) -- (g1);
+\draw[arr] (g1) -- (k2);
+\draw[arr] (k2) -- (out1);
+
+% Row 2: fused single kernel
+\node[memBox] (in2) at (-6.8,0) {Global input};
+\node[kernelbox, minimum width=4cm] (k) at (0,0) {Single kernel \\ \footnotesize registers + shared memory};
+\node[memBox] (out2) at (6.8,0) {Global output};
+
+\draw[arr] (in2) -- (k);
+\draw[arr] (k) -- (out2);
+
+\end{tikzpicture}%
+}
+\end{center}
+
+\begin{itemize}
+  \item Streaming Scan.
+  \item Avoid global memory round-trip.
+  \item Not the only optimization.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Levels of Optimization}
+\begin{center}
+\begin{tabular}{l|c|c|c|c|c}
+  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Sparse} & \textbf{Empty} \\
+  \hline
+  \textbf{2K} & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  \textbf{1K} & $3.5$ & $3.7$ & $4$ & $4.4$ & $4.9$ \\
+  \textbf{B} & $3.5$ & $3.7$ & $4.3$ & $4.9$ & $5.7$ \\
+  \textbf{CW} & $3.4$ & $3.6$ & $3.8$ & $4.2$ & $5.7$ \\
+  \textbf{FSMW} & $3.5$ & $3.8$ & $4.2$ & $5$ & $5.9$
+\end{tabular}
+
+\end{center}
+\begin{itemize}
+  \item Input of 500MiB signed 32-bit integers.
+  \item Close to the theoretical bandwidth limit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fusion of IR}
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=3.2cm, minimum height=1.1cm, align=center, font=\normalsize},
+  primbox/.style={box, fill=white, draw=deepteal},
+  fusedbox/.style={box, fill=deepteal, text=white, minimum width=6.5cm},
+  arr/.style={->, >=stealth, thick, deepteal}
+]
+
+% Before fusion: two separate producer/consumer screma
+\node[primbox] (p) at (-3.5,3) {Producer \\ \footnotesize map, scan};
+\node[primbox] (c) at (3.5,3) {Consumer \\ \footnotesize map, scatter};
+\draw[arr] (p) -- (c);
+
+% Fusion arrow
+\draw[arr, dashed] (0,2.2) -- node[right, font=\small] {fused by compiler} (0,0.6);
+
+% After fusion: single screma
+\node[fusedbox] (f) at (0,0) {Fused screma \\ \footnotesize map $\to$ scan $\to$ map (with scatter)};
+
+\end{tikzpicture}%
+}
+\end{center}
+
+\vspace{0.3cm}
+\begin{center}
+\small No dedicated fused primitive --- only \texttt{map}, \texttt{scan}, and \texttt{scatter}, combined by fusion.
+\end{center}
+\end{frame}
+
+\begin{frame}{Scatter as IR}
+\begin{align*}
+  & \kw{scanscatter}~\id{f}~(\oplus)~\id{g}~\id{as}~\id{ds} = \\
+  & \quad \Let~(\id{bs}, \id{gs})~=~(\Unzip\circ \Map~\id{f})~\id{as} \\
+  & \quad \Let~\id{bs'}~=~\Scan~(\oplus)~\id{bs} \\
+  & \quad \Let~(\id{is}, \id{vs}, \id{ss})~=~(\Unzip_3 \circ \Map_2~\id{g})~\id{bs'}~\id{gs} \\
+  & \quad \Let~\id{ds'}~=~\Scatter~\id{ds}~\id{is}~\id{vs} \\
+  & \quad \In~(\id{ds'}, \id{ss})
+\end{align*}
+\end{frame}
+
+\begin{frame}{Accumulators}
+\begin{itemize}
+  \item Write-only array view; updates accumulate in place.
+  \item Uniqueness types: consumed at most once.
+  \item $[](\kw{acc}~\tau) \cong \kw{acc}~\tau$ --- so \Map~can take and return accumulators.
+\end{itemize}
+
+\begin{align*}
+  \kw{with\_acc} &: *[]\tau \to (\kw{acc}~\tau \to \kw{acc}~\tau) \to []\tau \\
+  \kw{update\_acc} &: *\kw{acc}~\tau \to \Int \to \tau \to \kw{acc}~\tau
+\end{align*}
+
+\vspace{0.2cm}
+Scatter, expressed via accumulators:
+\begin{align*}
+  \kw{with\_acc}~(\lambda \id{acc} \to \Map_2~(\lambda \id{i}~\id{v} \to \kw{update\_acc}~\id{acc}~\id{i}~\id{v})~\id{is}~\id{vs})~\id{ds}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Scatter as Dataflow}
+\begin{align*}
+  & \kw{maposcanomap}~\id{f}~(\oplus)~\id{g}~\id{as} = \\
+  & \quad \Let~(\id{bs}, \id{gs})~=~(\Unzip \circ \Map~\id{f})~\id{as} \\
+  & \quad \Let~\id{bs'}~=~\Scan~(\oplus)~\id{bs} \\
+  & \quad \In~(\Map_2~\id{g})~\id{bs'}~\id{gs}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Results: Filter}
+\begin{center}
+\begin{tabular}{l|c|c|c|c|c}
+  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Sparse} & \textbf{Empty} \\
+  \hline
+  \textbf{F2K} & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  \textbf{F1K} & $3.5$ & $3.6$ & $4$ & $4.4$ & $4.5$
+\end{tabular}
+
+\vspace{20pt}
+
+\begin{tabular}{l|c|c|c|c|c}
+  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Sparse} & \textbf{Empty} \\
+  \hline
+  \textbf{F1K} & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  \textbf{CUB} & $1$ & $1.1$ & $1.1$ & $1.2$ & $1.2$
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Results: Partition}
+\begin{center}
+\begin{tabular}{l|c|c|c|c|c}
+  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Sparse} & \textbf{Empty} \\
+  \hline
+  \textbf{F2K} & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  \textbf{F1K} & $2.5$ & $2.6$ & $2.6$ & $2.6$ & $2.3$
+\end{tabular}
+
+\vspace{20pt}
+
+\begin{tabular}{l|c|c|c|c|c}
+  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Sparse} & \textbf{Empty} \\
+  \hline
+  \textbf{F1K} & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  \textbf{CUB} & $1.4$ & $1.4$ & $1.4$ & $1.4$ & $1.4$
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Results: Tokenizer}
+\begin{center}
+\begin{tabular}{l|c|c|c}
+  \textbf{Method} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
+  \hline
+  \textbf{F3K} & $1$ & $1$ & $1$ \\
+  \textbf{F2K} & $1.6$ & $1.8$ & $2$
+\end{tabular}
+
+\vspace{20pt}
+
+\begin{tabular}{l|c|c|c}
+  \textbf{Method} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
+  \hline
+  \textbf{F2K} & $1$ & $1$ & $1$ \\
+  \textbf{2K} & $1.8$ & $1.2$ & $1.1$
+\end{tabular}
+\end{center}
+\end{frame}
+
+\end{document}
