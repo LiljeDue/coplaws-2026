@@ -231,7 +231,8 @@
 \begin{center}
   \small Relative speedup over \textbf{2K} baseline (higher is better) \\[0.5em]
   \small Datasets vary by \% of elements written: \textbf{Empty} (0\%) $\to$ \textbf{Full} (100\%) \\[1em]
-\begin{tabular}{l|c|c|c|c|c}
+{\Large
+  \begin{tabular}{l|c|c|c|c|c}
   \textbf{Implementation} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
   \textbf{Sparse} & \textbf{Empty} \\
   \hline
@@ -241,6 +242,7 @@
   \textbf{CW} & $3.4\times$ & $3.6\times$ & $3.8\times$ & $4.2\times$ & $5.7\times$ \\
   \textbf{FSMW} & $3.5\times$ & $3.8\times$ & $4.2\times$ & $5\times$ & $5.9\times$ \\
 \end{tabular}
+}
 \end{center}
 \vfill
 \begin{center}
@@ -328,37 +330,38 @@ Scatter, expressed via accumulators:
   \kw{scanomap}~\id{f}~\oplus \equiv \kw{maposcanomap}~\id{f}~(\oplus)~(\lambda a~b \to (a, b))~\id{as}
 }
 \end{gather*}
-
 \end{frame}
 
 \begin{frame}{Results: Filter}
 \begin{center}
+{\Large
 \begin{tabular}{l|c|c|c|c|c}
-  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Implementation} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
   \textbf{Sparse} & \textbf{Empty} \\
   \hline
   \textbf{Old Futhark} & $1\times$ & $1\times$ & $1\times$ & $1\times$ & $1\times$ \\
   \textbf{New Futhark} & $3.5\times$ & $3.6\times$ & $4\times$ & $4.4\times$ & $4.5\times$
 \end{tabular}
-
 \vspace{20pt}
 
 \visible<2->{
 \begin{tabular}{l|c|c|c|c|c}
-  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Implementation} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
   \textbf{Sparse} & \textbf{Empty} \\
   \hline
   \textbf{New Futhark} & $1\times$ & $1\times$ & $1\times$ & $1\times$ & $1\times$ \\
   \textbf{CUB} & $1\times$ & $1.1\times$ & $1.1\times$ & $1.2\times$ & $1.2\times$
 \end{tabular}
 }
+}
 \end{center}
 \end{frame}
 
 \begin{frame}{Results: Partition}
 \begin{center}
+{\Large
 \begin{tabular}{l|c|c|c|c|c}
-  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Implementation} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
   \textbf{Sparse} & \textbf{Empty} \\
   \hline
   \textbf{Old Futhark} & $1 \times$ & $1\times$ & $1\times$ & $1\times$ & $1\times$ \\
@@ -369,20 +372,22 @@ Scatter, expressed via accumulators:
 
 \visible<2->{
 \begin{tabular}{l|c|c|c|c|c}
-  \textbf{Method} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
+  \textbf{Implementation} & \textbf{Full} & \textbf{Dense} & \textbf{Moderate} &
   \textbf{Sparse} & \textbf{Empty} \\
   \hline
   \textbf{New Futhark} & $1\times$ & $1\times$ & $1\times$ & $1\times$ & $1\times$ \\
   \textbf{CUB} & $1.4\times$ & $1.4\times$ & $1.4\times$ & $1.4\times$ & $1.4\times$
 \end{tabular}
 }
+}
 \end{center}
 \end{frame}
 
 \begin{frame}{Results: Tokenizer}
 \begin{center}
+{\Large
 \begin{tabular}{l|c|c|c}
-  \textbf{Method} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
+  \textbf{Implementation} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
   \hline
   \textbf{Old Futhark} & $1\times$ & $1\times$ & $1\times$ \\
   \textbf{New Futhark} & $1.6\times$ & $1.8\times$ & $2\times$
@@ -392,11 +397,12 @@ Scatter, expressed via accumulators:
 
 \visible<2->{
 \begin{tabular}{l|c|c|c}
-  \textbf{Method} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
+  \textbf{Implementation} & \textbf{Dense} & \textbf{Moderate} & \textbf{Sparse} \\
   \hline
   \textbf{New Futhark} & $1\times$ & $1\times$ & $1\times$ \\
   \textbf{2K} & $1.8\times$ & $1.2\times$ & $1.1\times$
 \end{tabular}
+}
 }
 \end{center}
 
