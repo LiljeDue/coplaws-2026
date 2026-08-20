@@ -144,7 +144,8 @@
 {\ttfamily\small\quad\textbf{let} result = scatter (copy as) is as} & \visible<6->{$[0, 2, 4, 3, 4, 5]$}\\[0.3em]
 {\ttfamily\small\quad\:\:\textbf{in} take~offsets[n - 1]~result} & \visible<7->{$[0, 2, 4]$}\\[0.3em]
 \end{tabular}
-
+\vfill
+{\tiny \textasteriskcentered{} copied array is actually a scratch array}
 \end{frame}
 
 \begin{frame}{Filter written in Futhark}
@@ -324,7 +325,7 @@ Scatter, expressed via accumulators:
   \Scan~\oplus \equiv \kw{maposcanomap}~(\lambda a \to (\id{f} a, ()) )~(\oplus)~(\lambda a~\_ \to a)~\id{as} \\[20pt]
 }
 \visible<3->{
-  \Map~\id{f} \circ \Scan~\oplus \equiv \kw{maposcanomap}~\id{f}~(\oplus)~(\lambda a~b \to (a, b))~\id{as}
+  \kw{scanomap}~\id{f}~\oplus \equiv \kw{maposcanomap}~\id{f}~(\oplus)~(\lambda a~b \to (a, b))~\id{as}
 }
 \end{gather*}
 
